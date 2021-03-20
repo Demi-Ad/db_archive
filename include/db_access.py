@@ -3,16 +3,17 @@ from typing import List
 
 
 class DbSetUp:
-    def __init__(self, path: str):
-        self.conn = sqlite3.connect(path)
+    def __init__(self, db_path: str):
+        self.conn = sqlite3.connect(db_path)
         self.cursor = self.conn.cursor()
 
 
 class DbWriter(DbSetUp):
-    def __init__(self, path: str):
-        super().__init__(path)
+    def __init__(self, db_path: str):
+        super().__init__(db_path)
 
-    def insert(self, sql: str, *args) -> None:
+    def insert(self, *args) -> None:
+        sql = "insert into InputData(file_name, extension_name, data, created_at) values (?,?,?,?)"
         self.cursor.execute(sql, args)
         self.conn.commit()
 
@@ -21,8 +22,8 @@ class DbWriter(DbSetUp):
 
 
 class DbSelect(DbSetUp):
-    def __init__(self, path: str):
-        super().__init__(path)
+    def __init__(self, db_path: str):
+        super().__init__(db_path)
 
     def select(self, sql: str, *args) -> List:
         self.cursor.execute(sql, args)
